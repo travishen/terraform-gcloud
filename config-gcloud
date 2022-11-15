@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+cmd="$@"
+
+# authentication with service account
+
+sa=${GOOGLE_CREDENTIALS-${GOOGLE_CLOUD_KEYFILE_JSON-${GCLOUD_KEYFILE_JSON-${GOOGLE_APPLICATION_CREDENTIALS}}}}
+
+if [ -n "$sa" ]
+then
+  gcloud auth activate-service-account --key-file="$sa"
+fi
+
+# configuration
+
+if [ -n "$GCP_PROJECT_NAME" ]
+then
+  gcloud config set project "$GCP_PROJECT_NAME";
+fi
+
+if [ -n "$GCP_COMPUTE_REGION" ]
+then
+  gcloud config set compute/region "$GCP_COMPUTE_REGION";
+fi
+
+if [ -n "$GCP_COMPUTE_ZONE" ]
+then
+  gcloud config set compute/zone "$GCP_COMPUTE_ZONE";
+fi
+
+exec $cmd
