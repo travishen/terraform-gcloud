@@ -11,13 +11,25 @@ COPY --from=terraform-deps /bin/terraform /bin/terraform
 
 ## Pre-install providers
 
-WORKDIR /tmp
+WORKDIR /opt/offline-tf-providers
 
 COPY providers.tf .
 
-RUN terraform init && terraform providers mirror --platform=linux_amd64 /opt/offline-tf-providers
+RUN terraform init && terraform providers mirror --platform=linux_amd64 .
 
 RUN rm providers.tf && rm -r .terraform
+
+## Pre-install modules
+
+WORKDIR /opt/offline-tf-modules
+
+COPY modules.tf .
+
+RUN terraform init
+
+RUN cp -r .terraform/modules/* .
+
+RUN rm modules.tf && rm -r .terraform
 
 ## Setup script
 
