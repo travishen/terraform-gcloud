@@ -8,3 +8,16 @@ This helper image contains:
     * hashicrop/google
     * hashicrop/google-beta
     * hashicrop/tls
+
+
+```bash
+$ docker build -t ssivart/terraform-gcloud:1.8 .
+```
+
+```
+$ docker login
+```
+
+```
+$ docker push ssivart/terraform-gcloud:1.8
+```
